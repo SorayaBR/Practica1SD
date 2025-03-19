@@ -42,7 +42,7 @@ def get_insults():
 
 # Iniciar ambas funciones en hilos separados
 threading.Thread(target=store_insults, daemon=True).start()
-threading.Thread(target=broadcast_insults, daemon=True).start()
+#threading.Thread(target=broadcast_insults, daemon=True).start()
 
 # Mantener el programa en ejecución
 while True:

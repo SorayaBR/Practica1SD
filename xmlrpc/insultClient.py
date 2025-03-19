@@ -11,3 +11,8 @@ print(insultServer.add_insult("Bobo"))
 
 # Obtenir llista d'insults
 print("Llista d'insults: ", insultServer.get_insult())
+
+# Rebre insults
+print("\nReceiving 5 random insults:")
+for _ in range(5):
+    print(insultServer.insult_me())

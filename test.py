@@ -16,6 +16,8 @@ def test_service(service, name):
     for _ in range(10):
         insult = random.choice(insults)
         service.add_insult(insult)
+        service.get_insult()
+        service.insult_me()
     elapsed_time = time.time() - start_time
     return elapsed_time
 
@@ -24,6 +26,7 @@ def test_filter(filter_service, name):
     for _ in range(10):
         text = random.choice(texts)
         filter_service.filter_text(text)
+        filter_service.get_filtered_texts()
     elapsed_time = time.time() - start_time
     return elapsed_time
 

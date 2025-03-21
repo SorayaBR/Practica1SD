@@ -28,7 +28,7 @@ def run_server():
     filter_service = InsultFilter()
     server.register_instance(filter_service)
     
-    print("InsultFilter escoltant a localhost:8001")
+    print("InsultFilter (xmlrpc) is running...")
     server.serve_forever()
 
 if __name__ == "__main__":

@@ -9,7 +9,7 @@ speedup_results = {}
 for tech, nodes_data in results.items():
     speedup_results[tech] = {}
     for nodes, clients_data in nodes_data.items():
-        base_time = clients_data["5"]
+        base_time = clients_data["2"]
         speedup_results[tech][nodes] = {int(clients): base_time / time for clients, time in clients_data.items()}
 
 # Graficar resultados

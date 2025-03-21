@@ -6,20 +6,27 @@ def start_server(command):
 
 def start_servers(n_nodes):
     processes = []
+    starting_port = 8000
 
     for i in range(n_nodes):
+        port = starting_port + i
         processes.append(start_server(f"python -m Pyro4.naming"))
-        processes.append(start_server(f"python xmlrpc/insultServer.py"))
+        processes.append(start_server(f"python xmlrpc/insultServer.py {port}"))
         time.sleep(2)
         processes.append(start_server(f"python pyro/insultServer.py"))
         time.sleep(2)
-        processes.append(start_server(f"python redis/insultServer.py"))
-        time.sleep(2)
+        #processes.append(start_server(f"python redis/insultServer.py"))
+        #time.sleep(2)
+        #processes.append(start_server(f"python RabbitMQ/insultServer.py"))
+        #time.sleep(2)
         processes.append(start_server(f"python xmlrpc/insultFilter.py"))
         time.sleep(2)
         processes.append(start_server(f"python pyro/insultFilter.py"))
-        time.sleep(2)
-        processes.append(start_server(f"python redis/insultFilter.py"))
+        #time.sleep(2)
+        #processes.append(start_server(f"python redis/insultFilter.py"))
+        #time.sleep(2)
+        #processes.append(start_server(f"python RabbitMQ/insultFilter.py"))
+        #time.sleep(2)
     time.sleep(5)
     return processes
 

@@ -37,7 +37,7 @@ def run_server():
     uri = daemon.register(InsultServer)
     ns.register("insult.server", uri)
 
-    print("InsultService running at "+ str(uri))
+    print("InsultService (Pyro) is running...")
     daemon.requestLoop()
 
 if __name__ == "__main__":

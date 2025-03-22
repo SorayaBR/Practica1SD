@@ -36,7 +36,8 @@ def add_servers(n_nodes, processes):
 
 def stop_servers(processes):
     for process in processes:
-        os.kill(process.pid, signal.SIGTERM)  # Enviar señal para detener
+        process.terminate()
+        os.kill(process.pid, signal.SIGTERM) 
         process.wait()
     print("Servers stopped...")
 

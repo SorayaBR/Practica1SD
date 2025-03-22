@@ -10,7 +10,7 @@ print(insultServer.add_insult("Tonto"))
 print(insultServer.add_insult("Bobo"))
 
 # Obtenir llista d'insults
-print("Llista d'insults: ", insultServer.get_insult())
+print("Llista d'insults: ", insultServer.get_insults())
 
 # Rebre insults
 print("\nReceiving 5 random insults:")

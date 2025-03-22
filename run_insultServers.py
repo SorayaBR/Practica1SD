@@ -6,26 +6,22 @@ def start_server(command):
 
 def start_servers(n_nodes):
     processes = []
-    starting_port = 8000
+    starting_port_xmlrpc = 8000
+    starting_port_pyro = 9091
+    processes.append(start_server(f"python -m Pyro4.naming"))
+    time.sleep(5)
 
     for i in range(n_nodes):
-        port = starting_port + i
-        processes.append(start_server(f"python -m Pyro4.naming"))
-        processes.append(start_server(f"python xmlrpc/insultServer.py {port}"))
-        time.sleep(2)
-        processes.append(start_server(f"python pyro/insultServer.py"))
-        time.sleep(2)
+        xmlrpc_port = starting_port_xmlrpc + i
+        pyro_port = starting_port_pyro + i
+        pyro_name = f"insultService{i+1}"
+        processes.append(start_server(f"python xmlrpc/insultServer.py {xmlrpc_port}"))
+        time.sleep(5)
+        processes.append(start_server(f"python pyro/insultServer.py {pyro_port} {pyro_name}"))
+        time.sleep(5)
         #processes.append(start_server(f"python redis/insultServer.py"))
         #time.sleep(2)
         #processes.append(start_server(f"python RabbitMQ/insultServer.py"))
-        #time.sleep(2)
-        processes.append(start_server(f"python xmlrpc/insultFilter.py"))
-        time.sleep(2)
-        processes.append(start_server(f"python pyro/insultFilter.py"))
-        #time.sleep(2)
-        #processes.append(start_server(f"python redis/insultFilter.py"))
-        #time.sleep(2)
-        #processes.append(start_server(f"python RabbitMQ/insultFilter.py"))
         #time.sleep(2)
     time.sleep(5)
     return processes
@@ -33,6 +29,8 @@ def start_servers(n_nodes):
 def stop_servers(processes):
     for process in processes:
         process.terminate()
+        process.wait()
+    print("Servers stopped...")
 
 if __name__ == "__main__":
     for nodes in [1,2,3]:

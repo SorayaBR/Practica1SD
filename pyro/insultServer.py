@@ -7,7 +7,7 @@ client = redis.Redis(host='localhost', port=6379, db=0, decode_responses=True)
 
 @Pyro4.expose
 class InsultServer:
-    def __init__(self):
+    def __init__(self, port):
         self.insults = "INSULTS"
         self.port = port
 
@@ -43,7 +43,7 @@ def run_server(port, name):
     uri = daemon.register(InsultServer(port))
     ns.register(name, uri)
 
-    print(f"**InsultServer (pyro) is running in port {port}. The name is_ {name} and uri is: {uri}**")
+    print(f"**InsultServer (pyro) is running in port {port}. The name is {name} and uri is: {uri}**")
     daemon.requestLoop()
 
 if __name__ == "__main__":

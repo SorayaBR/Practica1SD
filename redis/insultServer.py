@@ -8,7 +8,7 @@ import sys
 port = int(sys.argv[1]) if len(sys.argv) > 1 else 6379
 
 # Conectar con Redis en el puerto especificado
-client = redis.Redis(host='localhost', port=port, db=0, decode_responses=True)
+client = redis.Redis(host='localhost', port=port, db=0, decode_responses=True) 
 
 insult_list = "INSULTS"
 channel_name = "insult_channel"

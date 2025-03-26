@@ -34,53 +34,51 @@ def create_pyro_client(server_load, nodes):
     uri = ns.lookup(selected_name)  
 
     print(f"🔗 Cliente Pyro conectado a {selected_name} ({uri})")
-    time.sleep(2)
     return Pyro4.Proxy(uri)
 
 # Función para probar cada servicio con un conjunto de peticiones
-def test_service(client, method):
-    for _ in range(5):  # Se hacen 10 llamadas por cliente
+def test_service(client, method, num_messages):
+    start_time = time.time()
+    for _ in range(num_messages): 
         insult = random.choice(insults)
         method(client, insult)
+    total_time = time.time() - start_time
+    return num_messages / total_time # Devuelve mensajes por segundo
 
 # Función específica para XMLRPC
 def xmlrpc_insult(client, insult):
-    client.add_insult(insult)
-    client.get_insults()
     client.insult_me()
 
 def pyro_insult(client, insult):
-    client.add_insult(insult)
-    client.get_insults()
     client.insult_me()
 
 # Función que ejecuta los clientes en paralelo para cada tecnología y número de nodos
-def client_process(tech, nodes, server_load_xmlrpc, server_load_pyro, process_id, manager_dict):
+def client_process(tech, nodes, server_load_xmlrpc, server_load_pyro, process_id, manager_dict, num_messages):
     if tech == "XMLRPC":
         client = create_xmlrpc_client(server_load_xmlrpc, nodes)
     elif tech == "PYRO":
         client = create_pyro_client(server_load_pyro, nodes)
     
-    time.sleep(8)
+    time.sleep(6)
     start_time = time.time()
     if tech == "XMLRPC":
-        test_service(client, xmlrpc_insult)
+        R = test_service(client, xmlrpc_insult, num_messages)
     elif tech == "PYRO":
-        test_service(client, pyro_insult)
+        R = test_service(client, pyro_insult, num_messages)
 
-    elapsed_time = time.time() - start_time
-    manager_dict[process_id] = elapsed_time
+    manager_dict[process_id] = R
 
 if __name__ == "__main__":
-    num_clients = [1,2,3,6]  # Ahora probamos con 1 a 6 clientes simultáneos
+    num_clients = 5  # Ahora probamos con 1 a 6 clientes simultáneos
     technologies = ["XMLRPC", "PYRO"]  # Probamos con XMLRPC y Pyro
-    baseline_times = {}
+    baseline_rates = {}
     results = {tech: {str(nodes): {} for nodes in [1, 2, 3]} for tech in technologies}
 
     for nodes in [1, 2, 3]:  # Primero con 1 nodo, luego 2 y luego 3
         input(f"\n Levanta {nodes} nodo(s) y presiona Enter para continuar...")
 
         for tech in technologies:  # Evaluamos cada tecnología
+            num_messages = 150 if tech == "XMLRPC" else 500 if tech == "PYRO" else 1000
             print(f"\n**Ejecutando pruebas para {tech} con {nodes} nodo(s)**")
 
            # Usamos Manager para compartir el contador de clientes entre procesos
@@ -88,36 +86,31 @@ if __name__ == "__main__":
                 # Inicializamos el diccionario de carga con 0 clientes por puerto
                 server_load_xmlrpc = manager.dict({port: 0 for port in xmlrpc_ports})
                 server_load_pyro = manager.dict({name: 0 for name in pyro_names})
-                for clients in num_clients:
-                    processes = []
-                    manager_dict = manager.dict()
+                processes = []
+                manager_dict = manager.dict()
 
-                    for process_id in range(clients):  # Ejecutamos varios clientes simultáneamente
-                        p = multiprocessing.Process(target=client_process, args=(tech, nodes, server_load_xmlrpc, server_load_pyro, process_id, manager_dict))
-                        p.start()
-                        processes.append(p)
+                for process_id in range(num_clients):  # Ejecutamos varios clientes simultáneamente
+                    p = multiprocessing.Process(target=client_process, args=(tech, nodes, server_load_xmlrpc, server_load_pyro, process_id, manager_dict, num_messages))
+                    p.start()
+                    processes.append(p)
 
-                    for p in processes:
-                        p.join()
+                for p in processes:
+                    p.join()
                     
-                    elapsed_time = max(manager_dict.values())  # ⏳ Tomamos el mayor tiempo de los clientes
-                    results[tech][str(nodes)][str(clients)] = {"time": elapsed_time}
-                    print(f"--> {tech} - {nodes} nodos - {clients} clientes: {elapsed_time:.2f} segundos")
+                R_N = sum(manager_dict.values())  # Sumamos el rendimiento de todos los clientes
+                results[tech][str(nodes)][str(num_clients)] = {"rate": R_N}
+                print(f"--> {tech} - {nodes} nodos - messages: {num_messages} - {num_clients} clientes: {R_N:.2f} msg/seg")
 
-                    # Guardamos T1 (cuando nodes=1 y clients=1) para calcular Speedup
-                    if nodes == 1 and clients == 1:
-                        baseline_times[tech] = elapsed_time
+                # Guardamos T1 (cuando nodes=1) para calcular Speedup
+                if nodes == 1:
+                    baseline_rates[tech] = R_N
 
-                    # Calcular Speedup para cada configuración
-                for clients in num_clients:
-                    if clients > 1 and str(clients) in results[tech][str(nodes)]:
-                        T1 = baseline_times.get(tech, None)
-                        TN = results[tech][str(nodes)][str(clients)]["time"]
-
-                        if T1 and TN:
-                            speedup = T1 / TN
-                            results[tech][str(nodes)][str(clients)]["speedup"] = round(speedup, 5)
-                            print(f" Speedup {tech} - {nodes} nodos - {clients} clientes: {T1}/{TN}={speedup:.5f}")
+                # Calcular Speedup para cada configuración
+                R_1 = baseline_rates.get(tech, None)
+                if R_1 and R_N:
+                    speedup = R_N / R_1
+                    results[tech][str(nodes)][str(num_clients)]["speedup"] = round(speedup, 5)
+                    print(f" Speedup {tech} - {nodes} nodos - messages: {num_messages} - {num_clients} clientes: {R_N}/{R_1}={speedup:.5f}")
 
     # Guardar resultados en JSON
     with open("results_insultServers.json", "w") as f:

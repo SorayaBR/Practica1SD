@@ -2,14 +2,18 @@ import redis
 import time
 import random
 import threading
+import sys
 
-# Conectar con Redis
-client = redis.Redis(host='localhost', port=6379, db=0, decode_responses=True)
+# Obtener el puerto desde los argumentos del script
+port = int(sys.argv[1]) if len(sys.argv) > 1 else 6379
+
+# Conectar con Redis en el puerto especificado
+client = redis.Redis(host='localhost', port=port, db=0, decode_responses=True)
 
 insult_list = "INSULTS"
 channel_name = "insult_channel"
 
-print("InsultService (Redis) is running...")
+print(f"**InsultServer (redis) is running in port {port}.**")
 
 def store_insults():
     """Recibe insultos y los almacena en Redis (evitando duplicados)"""
@@ -38,6 +42,13 @@ def broadcast_insults():
 def get_insults():
     """Devuelve la lista completa de insultos almacenados en Redis"""
     return client.lrange(insult_list, 0, -1)
+
+def insult_me():
+    """Devuelve un insulto aleatorio"""
+    insults = client.lrange(insult_list, 0, -1)
+    if insults:
+        return random.choice(insults)
+    return "No insults available yet!"
 
 
 # Iniciar ambas funciones en hilos separados

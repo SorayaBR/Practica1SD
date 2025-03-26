@@ -5,33 +5,35 @@ import matplotlib.pyplot as plt
 with open("results_insultServers.json", "r") as f:
     results = json.load(f)
 
-# Graficar los resultados de speedup
-fig, axes = plt.subplots(1, 3, figsize=(18, 5))
+# Preparar los datos
+technologies = ["XMLRPC", "PYRO"]
+num_nodes = [1, 2, 3]
 
-# Iterar sobre los nodos
-for idx, nodes in enumerate([1, 2, 3]):
-    ax = axes[idx]
+plt.figure(figsize=(8, 5))
+
+# Iterar sobre cada tecnología
+for tech in technologies:
+    speedups = []
     
-    # Iterar sobre las tecnologías (XMLRPC y PYRO)
-    for tech, nodes_data in results.items():
-        if str(nodes) in nodes_data:
-            # Obtener los valores de clientes y speedup para esta tecnología y número de nodos
-            clients = list(nodes_data[str(nodes)].keys())
-            speedup = [
-                nodes_data[str(nodes)][client].get("speedup", 1.0)  # Si no hay speedup, usar 1.0 como valor por defecto
-                for client in clients
-            ]
-            
-            # Graficar los resultados
-            ax.plot(clients, speedup, marker="o", linestyle="-", label=tech)
+    for nodes in num_nodes:
+        if str(nodes) in results[tech]:
+            # Tomamos el máximo speedup de los clientes en cada configuración de nodos
+            max_speedup = max(
+                (data.get("speedup", 1.0) for data in results[tech][str(nodes)].values()),
+                default=1.0
+            )
+            speedups.append(max_speedup)
+        else:
+            speedups.append(1.0)  # Si no hay datos, asumimos speedup de 1
 
-    # Configurar el gráfico
-    ax.set_xlabel("Número de Clientes")
-    ax.set_ylabel("Speedup")
-    ax.set_title(f"Speedup con {nodes} nodo(s)")
-    ax.legend()
-    ax.grid(True)
+    plt.plot(num_nodes, speedups, marker="o", linestyle="-", label=tech)
 
-# Ajustar el diseño
-plt.tight_layout()
+# Configurar el gráfico
+plt.xlabel("Número de Nodos")
+plt.ylabel("Speedup")
+plt.title("Speedup InsultServers")
+plt.legend()
+plt.grid(True)
+
+# Mostrar el gráfico
 plt.show()

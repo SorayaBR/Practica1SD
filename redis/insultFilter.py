@@ -25,4 +25,4 @@ while True:
 
         processed_text = f"[Worker {worker_id}] {text}"
         client.rpush(result_list, processed_text)  # Guardar texto filtrado
-        print(f"Filtered by Worker {worker_id}: {processed_text}")
+        #print(f"Filtered by Worker {worker_id}: {processed_text}")

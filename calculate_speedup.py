@@ -12,7 +12,7 @@ def plot_speedup_from_json(file_name, figure_title):
     num_nodes = [1, 2, 3]
 
     # Crear una figura para este archivo JSON
-    fig, axes = plt.subplots(1, len(technologies), figsize=(15, 5), sharey=True)
+    fig, axes = plt.subplots(1, len(technologies), figsize=(15, 5), sharey=False)
     fig.suptitle(figure_title)
     
     if len(technologies) == 1:
@@ -44,28 +44,15 @@ def plot_speedup_from_json(file_name, figure_title):
         axes[i].grid(True)
         axes[i].legend()
         
-        # Ajuste específico para XMLRPC
-        if tech == "XMLRPC":
-            # Ajustar el rango para XMLRPC y hacer más visible la pequeña variación
-            axes[i].set_ylim(0.999, 1.0001)  # Ajuste para ver variaciones pequeñas en el speedup
-            axes[i].set_xlim(0.5, 3.5)  # Asegurarse de que los nodos 1, 2, 3 se vean claramente (con un poco de margen)
-            
-            # Formatear los ticks del eje Y con 5 decimales usando FuncFormatter
-            formatter = FuncFormatter(lambda x, _: f'{x:.5f}')
-            axes[i].yaxis.set_major_formatter(formatter)
-        else:
-            # Para PYRO, dejamos un rango general
-            axes[i].set_ylim(min(speedups) * 0.9, max(speedups) * 1.1)
-        
         # Asegurar que los números no se superpongan
         for tick in axes[i].get_xticklabels():
-            tick.set_rotation(45)  # Rotar las etiquetas del eje X
+            tick.set_rotation(45) 
         for tick in axes[i].get_yticklabels():
-            tick.set_fontsize(10)  # Ajustar el tamaño de la fuente de las etiquetas
+            tick.set_fontsize(10) 
 
     # Ajustar el espacio entre las subgráficas
     plt.tight_layout()
-    plt.subplots_adjust(top=0.85)  # Ajustar el título general
+    plt.subplots_adjust(top=0.85) 
 
 # Graficar los resultados de los dos archivos JSON
 plot_speedup_from_json("results_insultServers.json", "Speedup InsultServers")

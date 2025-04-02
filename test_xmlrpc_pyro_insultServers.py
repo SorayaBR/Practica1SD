@@ -21,7 +21,7 @@ def create_xmlrpc_client(server_load, nodes):
 
     selected_port = min(available_ports, key=lambda port: server_load[port])  # Puerto con menos carga
     server_load[selected_port] += 1
-    print(f"🔗 Cliente conectado a http://localhost:{selected_port}")
+    print(f"Cliente conectado a http://localhost:{selected_port}")
 
     return xmlrpc.client.ServerProxy(f"http://localhost:{selected_port}")
 
@@ -33,7 +33,7 @@ def create_pyro_client(server_load, nodes):
     server_load[selected_name] += 1
     uri = ns.lookup(selected_name)  
 
-    print(f"🔗 Cliente Pyro conectado a {selected_name} ({uri})")
+    print(f"Cliente Pyro conectado a {selected_name} ({uri})")
     return Pyro4.Proxy(uri)
 
 # Función para probar cada servicio con un conjunto de peticiones

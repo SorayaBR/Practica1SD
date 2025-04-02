@@ -28,7 +28,7 @@ class InsultFilter:
         return client.lrange(self.result_list, 0, -1)
 
 def run_server(port):
-    server = xmlrpc.server.SimpleXMLRPCServer(("localhost", port), allow_none=True)
+    server = xmlrpc.server.SimpleXMLRPCServer(("localhost", port), allow_none=True, logRequests=False)
     filter_service = InsultFilter(port)
     server.register_instance(filter_service)
     

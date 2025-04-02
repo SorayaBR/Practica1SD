@@ -1,30 +1,35 @@
 import json
 import matplotlib.pyplot as plt
-from matplotlib.ticker import FuncFormatter
+import numpy as np
 
 # Función para cargar y graficar los datos
-def plot_speedup_from_json(file_name, figure_title):
+def plot_speedup_from_json(file_names, figure_title):
     # Cargar los resultados del archivo JSON
-    with open(file_name, "r") as f:
-        results = json.load(f)
+    results = {}
+    for file_name in file_names:
+        with open(file_name, "r") as f:
+            data = json.load(f)
+            results.update(data)
     
-    technologies = ["XMLRPC", "PYRO"]
-    num_nodes = [1, 2, 3]
-
-    # Crear una figura para este archivo JSON
-    fig, axes = plt.subplots(1, len(technologies), figsize=(15, 5), sharey=False)
+    if figure_title == "Speedup InsultServers":
+        technologies = ["XMLRPC", "PYRO"]
+        fig, axes = plt.subplots(1, 2, figsize=(12, 5), sharey=False)
+    else:
+        technologies = ["XMLRPC", "PYRO", "Redis"]
+        fig, axes = plt.subplots(2, 2, figsize=(10, 10), sharey=False)
+    
     fig.suptitle(figure_title)
-    
-    if len(technologies) == 1:
-        axes = [axes]  # Asegurarse de que sea iterable si solo hay una tecnología
+    num_nodes = [1, 2, 3]
+    colores = ["#1f77b4", "#ff7f0e", "#2ca02c", "#d62728"] 
+    # Asegurar que los ejes son una lista bidimensional para iteración
+    axes = np.array(axes).reshape(-1)  # Convertir en un array plano para acceder por índice
 
-    # Iterar sobre cada tecnología
+    # Iterar sobre cada tecnología y asignar su subplot
     for i, tech in enumerate(technologies):
         speedups = []
         
         for nodes in num_nodes:
             if str(nodes) in results.get(tech, {}):
-                # Tomamos el máximo speedup de los clientes en cada configuración de nodos
                 max_speedup = max(
                     (data.get("speedup", 1.0) for data in results[tech][str(nodes)].values()),
                     default=1.0
@@ -33,30 +38,24 @@ def plot_speedup_from_json(file_name, figure_title):
             else:
                 speedups.append(1.0)  # Si no hay datos, asumimos speedup de 1
 
-        # Graficar los resultados en la subgráfica correspondiente
-        axes[i].plot(num_nodes, speedups, marker="o", linestyle="-", label=tech)
-        axes[i].set_title(tech)
-        axes[i].set_xlabel("Número de Nodos")
-        if i == 0:
-            axes[i].set_ylabel("Speedup")
+        # Graficar en la subgráfica correspondiente
+        ax = axes[i]  # Seleccionar el subplot correcto
+        ax.plot(num_nodes, speedups, marker="o", linestyle="-", label=tech, color=colores[i])
+        ax.set_title(tech, color=colores[i])
+        ax.set_xlabel("Nodos")
+        if i % 2 == 0:  # Primera columna
+            ax.set_ylabel("Speedup")
         
-        # Ajustes para que los valores se aprecien mejor
-        axes[i].grid(True)
-        axes[i].legend()
-        
-        # Asegurar que los números no se superpongan
-        for tick in axes[i].get_xticklabels():
-            tick.set_rotation(45) 
-        for tick in axes[i].get_yticklabels():
-            tick.set_fontsize(10) 
+        ax.grid(True)
+        ax.legend()
 
     # Ajustar el espacio entre las subgráficas
     plt.tight_layout()
-    plt.subplots_adjust(top=0.85) 
+    plt.subplots_adjust(top=0.9, hspace=0.5)
 
 # Graficar los resultados de los dos archivos JSON
-plot_speedup_from_json("results_insultServers.json", "Speedup InsultServers")
-plot_speedup_from_json("results_insultFilters.json", "Speedup InsultFilters")
+plot_speedup_from_json(["results_insultServers.json"], "Speedup InsultServers")
+plot_speedup_from_json(["results_insultFilters.json", "results_Redis_insultFilters.json"], "Speedup InsultFilters")
 
 # Mostrar las gráficas
 plt.show()

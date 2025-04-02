@@ -21,7 +21,7 @@ def create_xmlrpc_client(server_load, nodes):
 
     selected_port = min(available_ports, key=lambda port: server_load[port])  # Puerto con menos carga
     server_load[selected_port] += 1
-    print(f"🔗 Cliente conectado a http://localhost:{selected_port}")
+    print(f"Cliente conectado a http://localhost:{selected_port}")
 
     return xmlrpc.client.ServerProxy(f"http://localhost:{selected_port}")
 
@@ -33,7 +33,7 @@ def create_pyro_client(server_load, nodes):
     server_load[selected_name] += 1
     uri = ns.lookup(selected_name)  
 
-    print(f"🔗 Cliente Pyro conectado a {selected_name} ({uri})")
+    print(f" Cliente Pyro conectado a {selected_name} ({uri})")
     return Pyro4.Proxy(uri)
 
 # Función para probar cada servicio con un conjunto de peticiones
@@ -78,7 +78,7 @@ if __name__ == "__main__":
         input(f"\n Levanta {nodes} nodo(s) y presiona Enter para continuar...")
 
         for tech in technologies:  # Evaluamos cada tecnología
-            num_messages = 150 if tech == "XMLRPC" else 500 if tech == "PYRO" else 1000
+            num_messages = 50 if tech == "XMLRPC" else 3000
             print(f"\n**Ejecutando pruebas para {tech} con {nodes} nodo(s)**")
 
            # Usamos Manager para compartir el contador de clientes entre procesos

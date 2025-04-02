@@ -39,7 +39,7 @@ class InsultService:
         return "No hay insultos en la lista"
 
 def run_server(port):
-    server = xmlrpc.server.SimpleXMLRPCServer(("localhost", port), allow_none=True)
+    server = xmlrpc.server.SimpleXMLRPCServer(("localhost", port), allow_none=True, logRequests=False)
     service = InsultService(port)
     server.register_instance(service)
     

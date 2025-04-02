@@ -34,7 +34,7 @@ class InsultService:
         insults = client.lrange(self.insult_list, 0, -1)
         if insults: 
             insult = random.choice(insults)
-            print(f"Send insult: {insult} (port: {self.port})")
+            #print(f"Send insult: {insult} (port: {self.port})")
             return insult
         return "No hay insultos en la lista"
 

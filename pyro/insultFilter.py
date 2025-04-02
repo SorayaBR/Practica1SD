@@ -15,13 +15,13 @@ class InsultFilter:
 
     def filter_text(self, text):
         # Filtrar els insults en un text per substituir-los per CENSORED
-        print(f"Received text: {text}")
+        #print(f"Received text: {text}")
         insults = client.lrange(self.insults, 0, -1)
         for insult in insults:
             text = re.sub(rf'\b{re.escape(insult)}\b', "CENSORED", text, flags=re.IGNORECASE)
         
         client.rpush(self.result_list, text)
-        print(f"Filtered text: {text}")
+        #print(f"Filtered text: {text}")
         return text
     
     def get_filtered_texts(self):

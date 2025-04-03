@@ -1,6 +1,6 @@
 import pika
+import sys
 import random
-import time
 
 # Conectar con RabbitMQ
 connection = pika.BlockingConnection(pika.ConnectionParameters(host='localhost'))
@@ -12,10 +12,14 @@ channel.queue_declare(queue=queue_name)
 
 texts = ["Hola, eres un Tonto.", "Qué buen día.", "Eres un Canana.", "Vamos al cine?"]
 
-print("Text Producer (RabbitMQ) is running...")
+def produce_messages(num_messages):
+    print(f"Text Producer (RabbitMQ) is running and will send {num_messages} messages...")
+    for i in range(num_messages):
+        text = random.choice(texts)  # Elegir un texto aleatorio de la lista
+        channel.basic_publish(exchange='', routing_key=queue_name, body=text)
+        #print(f"Sent text: {text}")
+    connection.close()
 
-while True:
-    text = random.choice(texts)
-    channel.basic_publish(exchange='', routing_key=queue_name, body=text)
-    print(f"Sent text: {text}")
-    time.sleep(5)
+if __name__ == "__main__":
+    num_messages = int(sys.argv[1])  # Obtener el número de mensajes desde los argumentos de la línea de comandos
+    produce_messages(num_messages)

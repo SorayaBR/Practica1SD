@@ -78,7 +78,7 @@ if __name__ == "__main__":
         input(f"\n Levanta {nodes} nodo(s) y presiona Enter para continuar...")
 
         for tech in technologies:  # Evaluamos cada tecnología
-            num_messages = 50 if tech == "XMLRPC" else 3000
+            num_messages = 50 if tech == "XMLRPC" else 1000
             print(f"\n**Ejecutando pruebas para {tech} con {nodes} nodo(s)**")
 
            # Usamos Manager para compartir el contador de clientes entre procesos

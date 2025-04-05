@@ -1,0 +1,70 @@
+[
+    {
+        "message_rate": 1.0,
+        "required_workers": 1
+    },
+    {
+        "message_rate": 73.62,
+        "required_workers": 2
+    },
+    {
+        "message_rate": 40.64,
+        "required_workers": 3
+    },
+    {
+        "message_rate": 157.75,
+        "required_workers": 7
+    },
+    {
+        "message_rate": 0.0,
+        "required_workers": 6
+    },
+    {
+        "message_rate": 192.28,
+        "required_workers": 11
+    },
+    {
+        "message_rate": 0.0,
+        "required_workers": 9
+    },
+    {
+        "message_rate": 39.94,
+        "required_workers": 10
+    },
+    {
+        "message_rate": 87.88,
+        "required_workers": 12
+    },
+    {
+        "message_rate": 14.28,
+        "required_workers": 12
+    },
+    {
+        "message_rate": 0.0,
+        "required_workers": 8
+    },
+    {
+        "message_rate": 0.0,
+        "required_workers": 5
+    },
+    {
+        "message_rate": 0.0,
+        "required_workers": 3
+    },
+    {
+        "message_rate": 0.0,
+        "required_workers": 2
+    },
+    {
+        "message_rate": 0.0,
+        "required_workers": 1
+    },
+    {
+        "message_rate": 0.0,
+        "required_workers": 1
+    },
+    {
+        "message_rate": 0.0,
+        "required_workers": 0
+    }
+]

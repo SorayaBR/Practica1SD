@@ -1,0 +1,62 @@
+[
+    {
+        "timestamp": "2025-04-05 11:23:34",
+        "workers": 1
+    },
+    {
+        "timestamp": "2025-04-05 11:23:39",
+        "workers": 2
+    },
+    {
+        "timestamp": "2025-04-05 11:23:44",
+        "workers": 3
+    },
+    {
+        "timestamp": "2025-04-05 11:23:49",
+        "workers": 7
+    },
+    {
+        "timestamp": "2025-04-05 11:23:54",
+        "workers": 6
+    },
+    {
+        "timestamp": "2025-04-05 11:23:59",
+        "workers": 11
+    },
+    {
+        "timestamp": "2025-04-05 11:24:05",
+        "workers": 9
+    },
+    {
+        "timestamp": "2025-04-05 11:24:10",
+        "workers": 10
+    },
+    {
+        "timestamp": "2025-04-05 11:24:15",
+        "workers": 12
+    },
+    {
+        "timestamp": "2025-04-05 11:24:25",
+        "workers": 8
+    },
+    {
+        "timestamp": "2025-04-05 11:24:30",
+        "workers": 5
+    },
+    {
+        "timestamp": "2025-04-05 11:24:35",
+        "workers": 3
+    },
+    {
+        "timestamp": "2025-04-05 11:24:40",
+        "workers": 2
+    },
+    {
+        "timestamp": "2025-04-05 11:24:45",
+        "workers": 1
+    },
+    {
+        "timestamp": "2025-04-05 11:24:55",
+        "workers": 0
+    }
+]

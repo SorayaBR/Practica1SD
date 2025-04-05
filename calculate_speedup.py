@@ -15,7 +15,7 @@ def plot_speedup_from_json(file_names, figure_title):
         technologies = ["XMLRPC", "PYRO"]
         fig, axes = plt.subplots(1, 2, figsize=(12, 5), sharey=False)
     else:
-        technologies = ["XMLRPC", "PYRO", "Redis"]
+        technologies = ["XMLRPC", "PYRO", "Redis", "RabbitMQ"]
         fig, axes = plt.subplots(2, 2, figsize=(10, 10), sharey=False)
     
     fig.suptitle(figure_title)
@@ -55,7 +55,7 @@ def plot_speedup_from_json(file_names, figure_title):
 
 # Graficar los resultados de los dos archivos JSON
 plot_speedup_from_json(["results_insultServers.json"], "Speedup InsultServers")
-plot_speedup_from_json(["results_insultFilters.json", "results_Redis_insultFilters.json"], "Speedup InsultFilters")
+plot_speedup_from_json(["results_insultFilters.json", "results_Redis_insultFilters.json", "results_RabbitMQ_insultFilters.json"], "Speedup InsultFilters")
 
 # Mostrar las gráficas
 plt.show()

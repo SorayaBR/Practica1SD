@@ -16,7 +16,7 @@ def produce_wave(rate, duration):
     total_messages = int(rate * duration)
     interval = 1.0 / rate  # Tiempo entre mensajes para respetar la tasa
 
-    print(f"🚀 Enviando {total_messages} mensajes a {rate} msg/s durante {duration} segundos...")
+    print(f" Enviando {total_messages} mensajes a {rate} msg/s durante {duration} segundos...")
     for _ in range(total_messages):
         text = random.choice(texts)
         channel.basic_publish(exchange='', routing_key=queue_name, body=text)
@@ -29,11 +29,11 @@ def simulate_load():
     for wave in range(4):
         produce_wave(rate, duration)
         rate += 200  # Incrementamos la tasa para la siguiente oleada
-        print(f"✅ Finalizó ola {wave + 1}\n")
+        print(f" Finalizó ola {wave + 1}\n")
         time.sleep(3)  # Pausa entre oleadas
 
     connection.close()
-    print("🏁 Simulación finalizada.")
+    print(" Simulación finalizada.")
 
 if __name__ == "__main__":
     simulate_load()

@@ -27,6 +27,6 @@ def produce_messages(num_messages):
     connection.close()
 
 if __name__ == "__main__":
-    #num_messages = int(sys.argv[1])  # Obtener el número de mensajes desde los argumentos de la línea de comandos
-    #produce_messages(num_messages)
-    produce_messages(1000)  # Llamar a la función para enviar los mensajes
+    num_messages = int(sys.argv[1])  # Obtener el número de mensajes desde los argumentos de la línea de comandos
+    produce_messages(num_messages)
+    #produce_messages(1000)  # Llamar a la función para enviar los mensajes
